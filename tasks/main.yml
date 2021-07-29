@@ -1,4 +1,9 @@
 ---
+- name: Ensure AdoptOpenJDK/openjdk tap is tapped
+  homebrew_tap:
+    name: AdoptOpenJDK/openjdk
+    state: present
+
 - name: Ensure jenv is installed
   homebrew:
     name: jenv
