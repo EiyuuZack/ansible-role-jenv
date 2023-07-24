@@ -1,32 +1,41 @@
 ---
-- name: Ensure AdoptOpenJDK/openjdk tap is tapped
-  homebrew_tap:
-    name: AdoptOpenJDK/openjdk
-    state: present
+# No need for Java taps as of 2023, but keeping this just in case
+# See https://github.com/orgs/Homebrew/discussions/2172#discussioncomment-1364523
+# - name: Ensure AdoptOpenJDK/openjdk tap is tapped
+#   homebrew_tap:
+#     name: AdoptOpenJDK/openjdk
+#     state: present
 
 - name: Ensure jenv is installed
   homebrew:
     name: jenv
     state: present
 
+# Back to Homebrew's OpenJDK (should never have left?) - no need for sudo shenanigans, but keeping this just in case
+# - name: Ensure selected JDK versions are installed
+#   block:
+#     - name: Enable passwordless sudo
+#       lineinfile:
+#         path: /etc/sudoers
+#         line: '{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL'
+#       become: yes
+#     - homebrew_cask:
+#         name: '{{ item.version }}'
+#         state: present
+#       with_items: '{{ jenv_jdks }}'
+#   always:
+#     - name: Disable passwordless sudo
+#       lineinfile:
+#         path: /etc/sudoers
+#         line: '{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL'
+#         state: absent
+#       become: yes
+
 - name: Ensure selected JDK versions are installed
-  block:
-    - name: Enable passwordless sudo
-      lineinfile:
-        path: /etc/sudoers
-        line: '{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL'
-      become: yes
-    - homebrew_cask:
-        name: '{{ item.version }}'
-        state: present
-      with_items: '{{ jenv_jdks }}'
-  always:
-    - name: Disable passwordless sudo
-      lineinfile:
-        path: /etc/sudoers
-        line: '{{ ansible_user }} ALL=(ALL) NOPASSWD: ALL'
-        state: absent
-      become: yes
+  - homebrew_cask:
+      name: '{{ item.version }}'
+      state: present
+    with_items: '{{ jenv_jdks }}'
 
 - name: 'Ensure {{ jenv_root }} directory is created'
   file:
