@@ -50,15 +50,25 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK -- JENV"
   become: yes
 
-- name: Get available JDKs
-  shell: $SHELL -lc 'ls /Library/Java/JavaVirtualMachines/'
-  register: jdks
-  ignore_errors: yes
-  changed_when: False
+# Only needed for external JDK distros (e.g. adoptopenjdk, temurin)
+# - name: Get available JDKs
+#   shell: $SHELL -lc 'ls /Library/Java/JavaVirtualMachines/'
+#   register: jdks
+#   ignore_errors: yes
+#   changed_when: False
 
+# - name: Ensure JDKs are registered
+#   shell: $SHELL -lc "jenv add /Library/Java/JavaVirtualMachines/{{ item }}/Contents/Home" # must use double quotes here
+#   with_items: '{{ jdks.stdout_lines }}'
+#   ignore_errors: yes
+#   register: result
+#   changed_when: "'already' not in result.stdout"
+#   failed_when: "result.rc != 0 and 'already' not in result.stdout"
+
+# For Homebrew built JDK distros (e.g. openjdk)
 - name: Ensure JDKs are registered
-  shell: $SHELL -lc "jenv add /Library/Java/JavaVirtualMachines/{{ item }}/Contents/Home" # must use double quotes here
-  with_items: '{{ jdks.stdout_lines }}'
+  shell: $SHELL -lc "jenv add {{ jenv_homebrew_prefix }}/opt/{{ item }}/libexec/openjdk.jdk/Contents/Home" # must use double quotes here
+  with_items: '{{ jenv_jdks }}'
   ignore_errors: yes
   register: result
   changed_when: "'already' not in result.stdout"
