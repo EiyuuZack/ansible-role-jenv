@@ -32,10 +32,10 @@
 #       become: yes
 
 - name: Ensure selected JDK versions are installed
-  - homebrew_cask:
-      name: '{{ item.version }}'
-      state: present
-    with_items: '{{ jenv_jdks }}'
+  homebrew:
+    name: '{{ item.version }}'
+    state: present
+  with_items: '{{ jenv_jdks }}'
 
 - name: 'Ensure {{ jenv_root }} directory is created'
   file:
@@ -67,7 +67,7 @@
 
 # For Homebrew built JDK distros (e.g. openjdk)
 - name: Ensure JDKs are registered
-  shell: $SHELL -lc "jenv add {{ jenv_homebrew_prefix }}/opt/{{ item }}/libexec/openjdk.jdk/Contents/Home" # must use double quotes here
+  shell: $SHELL -lc "jenv add {{ jenv_homebrew_prefix }}/opt/{{ item.version }}/libexec/openjdk.jdk/Contents/Home" # must use double quotes here
   with_items: '{{ jenv_jdks }}'
   ignore_errors: yes
   register: result
