@@ -1,7 +1,7 @@
 ---
 jenv_homebrew_prefix: "{{ (ansible_machine == 'arm64') | ternary('/opt/homebrew', '/usr/local') }}"
 jenv_root: ~/.jenv
-jenv_default_jdk: 17.0
+jenv_default_jdk: 11.0
 jenv_jdks:
   - version: openjdk@11
   - version: openjdk@17
