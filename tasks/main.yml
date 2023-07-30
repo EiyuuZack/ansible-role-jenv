@@ -43,12 +43,11 @@
     state: directory
     mode: 0755
 
-- name: Ensure jenv is added to profile system-wide
+- name: Ensure jenv is added to user's profile
   blockinfile:
-    path: /etc/zprofile
+    path: "{{ lookup('ansible.builtin.env', 'HOME') }}/.zprofile"
     block: "{{ lookup('template', 'jenv.sh.j2') }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK -- JENV"
-  become: yes
 
 # Only needed for external JDK distros (e.g. adoptopenjdk, temurin)
 # - name: Get available JDKs
