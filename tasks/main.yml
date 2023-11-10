@@ -45,7 +45,7 @@
 
 - name: Ensure jenv is added to user's profile
   blockinfile:
-    path: "{{ lookup('ansible.builtin.env', 'HOME') }}/.zprofile"
+    path: "{{ ansible_env.HOME }}/.zprofile"
     block: "{{ lookup('template', 'jenv.sh.j2') }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK -- JENV"
 
