@@ -48,6 +48,7 @@
     path: "{{ ansible_env.HOME }}/.zprofile"
     block: "{{ lookup('template', 'jenv.sh.j2') }}"
     marker: "# {mark} ANSIBLE MANAGED BLOCK -- JENV"
+    create: true
 
 # Only needed for external JDK distros (e.g. adoptopenjdk, temurin)
 # - name: Get available JDKs
